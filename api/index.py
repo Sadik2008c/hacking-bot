@@ -12,15 +12,37 @@ application = Application.builder().token(TOKEN).build()
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != OWNER_ID:
-        await update.message.reply_text("❌ শুধু Owner ব্যবহার করতে পারবে।")
+        await update.message.reply_text("❌ এই বট শুধু Owner এর জন্য।")
         return
-    await update.message.reply_text("✅ Bot চালু আছে!\n/menu লিখে মেনু দেখো।")
+    await update.message.reply_text("""🔥 **Educational Hacking Learning Bot**
+
+মেনু:
+• python hacking
+• sql injection
+• xss
+• reverse shell
+• wifi cracking
+• ctf""")
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != OWNER_ID:
         return
-    text = update.message.text.lower()
-    reply = "শিখতে চাও কী? লিখো:\npython hacking\nsql injection\nreverse shell\nwifi cracking\nxss"
+    
+    text = update.message.text.lower().strip()
+    
+    if "python" in text and "hacking" in text:
+        reply = "🐍 Python Port Scanner কোড:\n```python\nimport socket\ntarget = '192.168.1.1'\nfor port in range(1,100):\n    s = socket.socket()\n    if s.connect_ex((target, port)) == 0:\n        print(f'Port {port} open')\n```"
+    elif "sql" in text or "injection" in text:
+        reply = "💉 SQL Injection Payload:\n' OR '1'='1' --"
+    elif "xss" in text:
+        reply = "❌ XSS Payload:\n<script>alert('Hacked')</script>"
+    elif "reverse" in text or "shell" in text:
+        reply = "🔄 Reverse Shell কোড চাইলে 'revshell' লিখো"
+    elif "wifi" in text:
+        reply = "📡 WiFi Cracking steps চাইলে 'wifi steps' লিখো"
+    else:
+        reply = "ঠিক আছে! আরও বিস্তারিত জানতে টপিকের নাম লিখো।"
+    
     await update.message.reply_text(reply)
 
 application.add_handler(CommandHandler("start", start))
@@ -33,9 +55,10 @@ async def webhook(request: Request):
         update = Update.de_json(data, application.bot)
         await application.process_update(update)
         return {"status": "ok"}
-    except:
+    except Exception as e:
+        print(e)
         return {"status": "error"}
 
 @app.get("/")
 async def home():
-    return {"message": "Bot is running on Vercel"}
+    return {"message": "✅ Educational Hacking Bot is Live on Vercel!"}
