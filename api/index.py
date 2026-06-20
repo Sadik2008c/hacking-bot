@@ -14,15 +14,14 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != OWNER_ID:
         await update.message.reply_text("❌ এই বট শুধু Owner এর জন্য।")
         return
-    await update.message.reply_text("""🔥 **Educational Hacking Learning Bot**
+    await update.message.reply_text("""✅ **MyHackLearnerBot চালু আছে!**
 
-মেনু:
+শিখতে চাও যেকোনো একটা লিখো:
 • python hacking
 • sql injection
 • xss
 • reverse shell
-• wifi cracking
-• ctf""")
+• wifi cracking""")
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != OWNER_ID:
@@ -30,18 +29,18 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     text = update.message.text.lower().strip()
     
-    if "python" in text and "hacking" in text:
-        reply = "🐍 Python Port Scanner কোড:\n```python\nimport socket\ntarget = '192.168.1.1'\nfor port in range(1,100):\n    s = socket.socket()\n    if s.connect_ex((target, port)) == 0:\n        print(f'Port {port} open')\n```"
+    if "python" in text:
+        reply = "🐍 Python Hacking Scripts চাইলে বলো 'portscan' বা 'revshell'"
     elif "sql" in text or "injection" in text:
-        reply = "💉 SQL Injection Payload:\n' OR '1'='1' --"
+        reply = "💉 SQL Injection:\n' OR '1'='1' --\nDVWA তে প্র্যাকটিস করো"
     elif "xss" in text:
         reply = "❌ XSS Payload:\n<script>alert('Hacked')</script>"
     elif "reverse" in text or "shell" in text:
-        reply = "🔄 Reverse Shell কোড চাইলে 'revshell' লিখো"
+        reply = "🔄 Python Reverse Shell কোড চাইলে 'revshell' লিখো"
     elif "wifi" in text:
-        reply = "📡 WiFi Cracking steps চাইলে 'wifi steps' লিখো"
+        reply = "📡 WiFi Cracking steps চাইলে 'wifi' লিখো"
     else:
-        reply = "ঠিক আছে! আরও বিস্তারিত জানতে টপিকের নাম লিখো।"
+        reply = "✅ বট চালু আছে! কোন টপিক শিখতে চাও?"
     
     await update.message.reply_text(reply)
 
@@ -53,12 +52,14 @@ async def webhook(request: Request):
     try:
         data = await request.json()
         update = Update.de_json(data, application.bot)
+        if not application._initialized:
+            await application.initialize()
         await application.process_update(update)
         return {"status": "ok"}
     except Exception as e:
-        print(e)
+        print("Error:", str(e))
         return {"status": "error"}
 
 @app.get("/")
 async def home():
-    return {"message": "✅ Educational Hacking Bot is Live on Vercel!"}
+    return {"message": "✅ Bot is Live!"}
