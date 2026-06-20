@@ -21,7 +21,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 • sql injection
 • xss
 • reverse shell
-• wifi cracking""")
+• wifi cracking
+• ctf
+• metasploit""")
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != OWNER_ID:
@@ -29,37 +31,15 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     text = update.message.text.lower().strip()
     
-    if "python" in text:
-        reply = "🐍 Python Hacking Scripts চাইলে বলো 'portscan' বা 'revshell'"
-    elif "sql" in text or "injection" in text:
-        reply = "💉 SQL Injection:\n' OR '1'='1' --\nDVWA তে প্র্যাকটিস করো"
-    elif "xss" in text:
-        reply = "❌ XSS Payload:\n<script>alert('Hacked')</script>"
-    elif "reverse" in text or "shell" in text:
-        reply = "🔄 Python Reverse Shell কোড চাইলে 'revshell' লিখো"
-    elif "wifi" in text:
-        reply = "📡 WiFi Cracking steps চাইলে 'wifi' লিখো"
-    else:
-        reply = "✅ বট চালু আছে! কোন টপিক শিখতে চাও?"
-    
-    await update.message.reply_text(reply)
+    if "python" in text and "hacking" in text:
+        reply = """🐍 **Python Hacking Scripts:**
 
-application.add_handler(CommandHandler("start", start))
-application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-
-@app.post("/webhook")
-async def webhook(request: Request):
-    try:
-        data = await request.json()
-        update = Update.de_json(data, application.bot)
-        if not application._initialized:
-            await application.initialize()
-        await application.process_update(update)
-        return {"status": "ok"}
-    except Exception as e:
-        print("Error:", str(e))
-        return {"status": "error"}
-
-@app.get("/")
-async def home():
-    return {"message": "✅ Bot is Live!"}
+**Port Scanner:**
+```python
+import socket
+target = "192.168.0.1"
+for port in range(1, 500):
+    s = socket.socket()
+    if s.connect_ex((target, port)) == 0:
+        print(f"Port {port} Open")
+    s.close()
